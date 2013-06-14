@@ -35,7 +35,7 @@ class Path(object):
     
     
     def __iter__(self):
-        return iter(self.points)
+        return iter(self.__points)
     
     
     def __getattr__(self, attrname):
