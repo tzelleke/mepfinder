@@ -65,8 +65,6 @@ class _OptimizationMixin(object):
         for i, bound in enumerate(args):
             if bound is None:
                 continue
-            if bound[0] is None and len(bound) is 1:
-                continue
             if type(bound) in [int, float]:
                 bound = (bound,)
             if not type(bound) in [tuple, list]:
