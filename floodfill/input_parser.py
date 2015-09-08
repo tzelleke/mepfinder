@@ -2,10 +2,15 @@
 @author: tzelleke
 '''
 
+from argparse import ArgumentParser
+from pyparsing import (nums, Word, Suppress,
+                       Or, ZeroOrMore, delimitedList,
+                       Empty, Group)
+from numpy import searchsorted as ss
+from numpy import argmin, abs
+
 
 def gen_args_parser():
-    from argparse import ArgumentParser
-    
     parser = ArgumentParser()
     parser.add_argument("-c", dest='colvar', required=True,
                         help="path to colvar_mtd")
@@ -19,35 +24,26 @@ def gen_args_parser():
 
 
 def gen_points_parser():
-    from pyparsing import (nums, Word, Suppress,
-                           Or, ZeroOrMore, delimitedList,
-                           Empty, Group)    
-    
-    
     def _gen_slice(lb, ub):
-        from numpy import searchsorted as ss
-        
         def g(grid_vec):
-            _lb = ss(grid_vec, lb) if not lb is None else 0 
+            _lb = ss(grid_vec, lb) if not lb is None else 0
             _ub = ss(grid_vec, ub) + 1 if not ub is None else None
             return slice(_lb, _ub)
+
         return g
-    
-    
+
     def _gen_point(p):
-        from numpy import argmin, abs
-        
         def f(grid_vec):
             _p = argmin(abs(p - grid_vec))
             return slice(_p, _p + 1)
+
         return f
-    
-    
+
     lt = Suppress('<')
     colon = Suppress(':')
     lsqr = Suppress('[')
     rsqr = Suppress(']')
-    
+
     number = Word(nums + '.').setParseAction(lambda t: float(t[0]))
     lbound = (number + lt)
     ubound = (lt + number)
@@ -64,7 +60,7 @@ def gen_points_parser():
 
 if __name__ == '__main__':
     points_parser = gen_points_parser()
-    
+
     test = '[,4]:[4.5<,3<<5]'
     match = points_parser.parseString(test)
     print match

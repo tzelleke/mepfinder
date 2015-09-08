@@ -2,42 +2,35 @@
 @author: tzelleke
 '''
 
+from heapq import heappush as hpush, heappop as hpop
 
 import numpy as np
-from heapq import heappush as hpush, heappop as hpop
 
 
 class Point(object):
-    
     attribs = {'coords': np.nan,
                'coords_idx': np.nan,
                'pot': np.nan,
                'has_nan_neighbor': False}
-    
-    
+
     def __init__(self, **kwargs):
         self.__dict__.update(Point.attribs)
         self.__dict__.update(kwargs)
-    
-    
+
     def __repr__(self):
         return repr(self.__dict__)
 
 
 class Path(object):
-    
     def __init__(self):
         self.__points = []
-    
-    
+
     def append(self, point):
         self.__points.append(point)
-    
-    
+
     def __iter__(self):
         return iter(self.__points)
-    
-    
+
     def __getattr__(self, attrname):
         if attrname in Point.attribs:
             vals = []
@@ -46,8 +39,7 @@ class Path(object):
             return np.array(vals)
         else:
             raise AttributeError(attrname)
-    
-    
+
     @property
     def points(self):
         return (self.coords, self.pot)
@@ -58,7 +50,6 @@ class EmptyHeapError(Exception):
 
 
 class Flooder(object):
-    
     def __init__(self, grid_func):
         self.gf = grid_func
         pot_1D = grid_func.pot_1D
@@ -69,14 +60,13 @@ class Flooder(object):
         self.p_idx = np.zeros(size, dtype=np.int)
         self.heap = []
 
-
     def flood(self, p1, p2):
         idx1 = self.gf.idx(p1)
         idx2 = self.gf.idx(p2)
         self._flood_init(idx1, idx2)
         meeting_node_A, meeting_node_B = self._floodfill()
         path_idx = self._follow_path(meeting_node_A, meeting_node_B)
-        
+
         path = Path()
         for idx in path_idx:
             coords_idx = self.gf.coords_idx(idx)
@@ -91,9 +81,8 @@ class Flooder(object):
                               coords=coords,
                               pot=pot,
                               has_nan_neighbor=has_nan_neighbor))
-        
-        return path
 
+        return path
 
     def _flood_init(self, idx1, idx2):
         self.heap = []
@@ -103,7 +92,6 @@ class Flooder(object):
         self.color[idx2] = 2
         hpush(self.heap, self.inv_sidx[idx1])
         hpush(self.heap, self.inv_sidx[idx2])
-
 
     def _floodfill(self):
         other_color_nodes = []
@@ -125,12 +113,11 @@ class Flooder(object):
         node = self.sidx[min(other_color_nodes)]
         node_color = self.color[node]
         if current_color < node_color:
-            
+
             return (current_node, node)
         else:
-            
-            return (node, current_node)
 
+            return (node, current_node)
 
     def _follow_path(self, meeting_node_A, meeting_node_B):
         path_idx = []
@@ -143,30 +130,25 @@ class Flooder(object):
         path_idx.append(meeting_node_B)
         while self.p_idx[path_idx[-1]] > -1:
             path_idx.append(self.p_idx[path_idx[-1]])
-        
+
         return path_idx
 
 
 if __name__ == '__main__':
-    pass
-#     from vreco import Vreco
-#     from gridFunc import GridFunc
-# 
-#     v = Vreco('../data/colvar_mtd',
-#               '../data/parvar_mtd')
-#     pot, grid_vecs = v.pot(4000)
-#     
-#     gf = GridFunc.from_grid_vecs(pot, grid_vecs)
-#     flooder = Flooder(gf)
-#     p1 = gf.map_nearest((8.5, 1.3))
-#     p2 = gf.map_nearest((9, 2.5))
-#     p1 = gf.minimize(p1)
-#     p2 = gf.minimize(p2)
-#     path = flooder.flood(p1, p2)
-#     
-#     for p in path:
-#         print p
-    
-    
+    from vreco import Vreco
+    from grid_func import GridFunc
 
+    v = Vreco('../data/colvar_mtd',
+              '../data/parvar_mtd')
+    pot, grid_vecs = v.pot(4000)
 
+    gf = GridFunc.from_grid_vecs(pot, grid_vecs)
+    flooder = Flooder(gf)
+    p1 = gf.map_nearest((8.5, 1.3))
+    p2 = gf.map_nearest((9, 2.5))
+    p1 = gf.minimize(p1)
+    p2 = gf.minimize(p2)
+    path = flooder.flood(p1, p2)
+
+    for p in path:
+        print p

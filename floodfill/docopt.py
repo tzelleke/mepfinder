@@ -9,18 +9,15 @@
 import sys
 import re
 
-
 __all__ = ['docopt']
 __version__ = '0.6.1'
 
 
 class DocoptLanguageError(Exception):
-
     """Error in construction of usage-message by developer."""
 
 
 class DocoptExit(SystemExit):
-
     """Exit in case user invoked program with incorrect arguments."""
 
     usage = ''
@@ -30,7 +27,6 @@ class DocoptExit(SystemExit):
 
 
 class Pattern(object):
-
     def __eq__(self, other):
         return repr(self) == repr(other)
 
@@ -97,7 +93,6 @@ def transform(pattern):
 
 
 class LeafPattern(Pattern):
-
     """Leaf/terminal node of a pattern tree."""
 
     def __init__(self, name, value=None):
@@ -131,7 +126,6 @@ class LeafPattern(Pattern):
 
 
 class BranchPattern(Pattern):
-
     """Branch/inner node of a pattern tree."""
 
     def __init__(self, *children):
@@ -148,7 +142,6 @@ class BranchPattern(Pattern):
 
 
 class Argument(LeafPattern):
-
     def single_match(self, left):
         for n, pattern in enumerate(left):
             if type(pattern) is Argument:
@@ -163,7 +156,6 @@ class Argument(LeafPattern):
 
 
 class Command(Argument):
-
     def __init__(self, name, value=False):
         self.name, self.value = name, value
 
@@ -178,7 +170,6 @@ class Command(Argument):
 
 
 class Option(LeafPattern):
-
     def __init__(self, short=None, long=None, argcount=0, value=False):
         assert argcount in (0, 1)
         self.short, self.long, self.argcount = short, long, argcount
@@ -217,7 +208,6 @@ class Option(LeafPattern):
 
 
 class Required(BranchPattern):
-
     def match(self, left, collected=None):
         collected = [] if collected is None else collected
         l = left
@@ -230,7 +220,6 @@ class Required(BranchPattern):
 
 
 class Optional(BranchPattern):
-
     def match(self, left, collected=None):
         collected = [] if collected is None else collected
         for pattern in self.children:
@@ -239,12 +228,10 @@ class Optional(BranchPattern):
 
 
 class OptionsShortcut(Optional):
-
     """Marker/placeholder for [options] shortcut."""
 
 
 class OneOrMore(BranchPattern):
-
     def match(self, left, collected=None):
         assert len(self.children) == 1
         collected = [] if collected is None else collected
@@ -266,7 +253,6 @@ class OneOrMore(BranchPattern):
 
 
 class Either(BranchPattern):
-
     def match(self, left, collected=None):
         collected = [] if collected is None else collected
         outcomes = []
@@ -280,7 +266,6 @@ class Either(BranchPattern):
 
 
 class Tokens(list):
-
     def __init__(self, source, error=DocoptExit):
         self += source.split() if hasattr(source, 'split') else source
         self.error = error
@@ -562,8 +547,8 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     options = parse_defaults(doc)
     pattern = parse_pattern(formal_usage(DocoptExit.usage), options)
     # [default] syntax for argument is disabled
-    #for a in pattern.flat(Argument):
-    #    same_name = [d for d in arguments if d.name == a.name]
+    # for a in pattern.flat(Argument):
+    # same_name = [d for d in arguments if d.name == a.name]
     #    if same_name:
     #        a.value = same_name[0].value
     argv = parse_argv(Tokens(argv), list(options), options_first)
