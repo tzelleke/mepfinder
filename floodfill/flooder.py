@@ -1,6 +1,6 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 from heapq import heappush as hpush, heappop as hpop
 

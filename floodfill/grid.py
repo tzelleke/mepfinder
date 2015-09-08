@@ -1,6 +1,6 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 from itertools import product
 
@@ -15,6 +15,15 @@ class Grid(object):
         self.grid_vecs = self._init_grid_vecs(linspaces)
         self._dim_offsets = self._init_dim_offsets(self.shape)
         self._neigbor_offsets = self._init_neighbor_offsets(self._dim_offsets)
+
+    @property
+    def linspaces(self):
+        linspaces = []
+        ext = self.extents
+        for i, dimlen in enumerate(self.shape):
+            start, stop = ext[i]
+            linspaces.append((start, stop, dimlen))
+        return linspaces
 
     @classmethod
     def from_size(cls, extents, size, weights=None):

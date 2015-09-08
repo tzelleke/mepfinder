@@ -1,6 +1,6 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 from argparse import ArgumentParser
 from pyparsing import (nums, Word, Suppress,

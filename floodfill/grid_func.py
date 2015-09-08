@@ -1,17 +1,18 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 import numpy as np
+from scipy.ndimage.filters import gaussian_filter
 
 import grid
 
 
 class _OptimizationMixin(object):
-    '''
+    """
     Mixin class that provides functionality to find
     minima of a GridFunc on the grid.
-    '''
+    """
 
     def minimize(self, coords_idx):
         idx = self.idx(coords_idx)
@@ -98,7 +99,7 @@ class _OptimizationMixin(object):
 
 
 class GridFunc(grid.Grid, _OptimizationMixin):
-    '''
+    """
     Object that represents a given n-dimensional ndarray
     of function values (pot) evaluated on a grid of same
     shape.
@@ -116,7 +117,7 @@ class GridFunc(grid.Grid, _OptimizationMixin):
     specifies a 3-dimensional grid of shape (100, 15, 5)
     ranging from -2 to 2 in the first dim. and 0 to 1 in
     the second dim and 30 to 50 in the last dim.
-    '''
+    """
 
     def __init__(self, pot, linspaces):
         super(GridFunc, self).__init__(linspaces)
@@ -125,11 +126,11 @@ class GridFunc(grid.Grid, _OptimizationMixin):
 
     @classmethod
     def from_grid_vecs(cls, pot, grid_vecs):
-        '''
+        """
         convenience method to construct a GridFunc from
         grid vectors. Grid vectors hold the gridpoints
         along the axes of the grid.
-        '''
+        """
         linspaces = []
         for gv in grid_vecs:
             gv = gv.ravel()
@@ -139,11 +140,11 @@ class GridFunc(grid.Grid, _OptimizationMixin):
 
     @classmethod
     def from_file(cls, filepath):
-        '''
+        """
         convenience method to construct a GridFunc from
         a file, for instance from
         V.Final.out obtained through vreco
-        '''
+        """
         data = np.loadtxt(filepath)
         pot = data[:, -1]
         linspaces = []
@@ -153,17 +154,29 @@ class GridFunc(grid.Grid, _OptimizationMixin):
 
         return cls(pot, linspaces)
 
-    @classmethod
-    def smooth(cls, gf, sigma):
-        pass
+    def _copy(self):
+        """
+        Creates a deep copy of a GridFunc instance
+        :return: GridFunc
+        """
+        pot = self.pot_1D.reshape(self.shape)
+        copy = self.__class__(pot, self.linspaces)
+        return copy
 
     def neighbors_idx(self, idx):
         return [_ for _ in
                 super(GridFunc, self).neighbors_idx(idx)
                 if not np.isnan(self.pot_1D[_])]
 
-    def smooth(self, sigma):
-        pass
+    def smooth(self, sigma, copy=False):
+        pot = self.pot_1D.reshape(self.shape)
+        pot_smoothed = gaussian_filter(pot, sigma, mode='constant')
+        if not copy:
+            gf = self
+        else:
+            gf = self._copy()
+        gf.pot_1D = pot_smoothed.ravel()
+        return gf
 
     def save(cls, filepath_or_buffer):
         pass

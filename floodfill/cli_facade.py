@@ -1,6 +1,6 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 from docopt import docopt
 from grid_func import GridFunc

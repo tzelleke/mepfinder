@@ -1,6 +1,6 @@
-'''
+"""
 @author: tzelleke
-'''
+"""
 
 from numpy import mgrid, argmin
 
