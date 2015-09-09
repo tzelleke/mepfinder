@@ -178,8 +178,22 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         gf.pot_1D = pot_smoothed.ravel()
         return gf
 
-    def save(cls, filepath_or_buffer):
-        pass
+    def save(self, filepath_or_buffer):
+        if isinstance(filepath_or_buffer, str):
+            with open(filepath_or_buffer, 'w') as buffer:
+                self._save(buffer)
+        else:
+            self._save(filepath_or_buffer)
+
+    def _save(self, buffer):
+        data = np.meshgrid(*self.grid_vecs, indexing='ij')
+        data = [_.ravel() for _ in data]
+        data.append(self.pot_1D)
+        data = np.column_stack(data)
+        chunksize = self.grid_vecs[-1].size
+        for i in range(0, self.nnodes, chunksize):
+            np.savetxt(buffer, data[i:i+chunksize], fmt='%16.8f', delimiter=' ')
+            buffer.write('\n')
 
 
 # TESTS
@@ -197,3 +211,11 @@ if __name__ == '__main__':
 
     gf = GridFunc.from_file('../data/V.final.out')
     assert gf.shape == (241, 101)
+
+    from StringIO import StringIO
+    gf = GridFunc.from_file('../data/V.final.out')
+    buffer = StringIO()
+    gf.save(buffer)
+    with open('../data/V.final.out') as f:
+        orig = f.read()
+    assert orig == buffer.getvalue()
