@@ -1,6 +1,6 @@
-# Floodfill
+# MinEnergyPath
 
-Floodfill finds minimum (free) energy paths connecting
+MinEnergyPath finds minimum (free) energy paths connecting
 minima on multidimensional (free) energy surfaces
 
 ## Example
@@ -10,8 +10,8 @@ The example data can be found in the `data/` dir.
 Import `GridFunc` and `Flooder`
 
 ```python
-from floodfill.gridFunc import GridFunc
-from floodfill.flooder import Flooder
+from MinEnergyPath.gridFunc import GridFunc
+from MinEnergyPath.flooder import Flooder
 ```
 
 Use the `vreco` tool to generate `V.final.out`
@@ -19,7 +19,7 @@ which contains the grid and the potential
 Initialize a `GridFunc` from `V.final.out`.
 
 ```python
-gf = GridFunc.from_vreco('data/V.final.out')
+gf = GridFunc.from_file('data/V.final.out')
 ```
 
 In this example the grid is 2D and contains 241 grid points
