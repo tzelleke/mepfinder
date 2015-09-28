@@ -19,7 +19,7 @@ _filter_none_list = lambda b: [None if len(_) == 1 and _[0] is None
 
 
 def run():
-    # argv = ['/home/tzelleke/git/MinEnergyPath/data/V.final.out', ',:0.5', ',0.5:']
+    # argv = ['/home/tzelleke/git/MinEnergyPath/data/surface.txt', ',:0.5', ',0.5:']
     argv = docopt(_doc)
     gf = GridFunc.from_file(argv['<v_final_out>'])
     template = '{:8.4f}' * (len(gf.shape) + 1)

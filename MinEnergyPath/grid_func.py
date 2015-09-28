@@ -209,13 +209,13 @@ if __name__ == '__main__':
     gf = GridFunc(pot=pot, linspaces=linspaces)
     assert gf.minimize((9, 14)) == (5, 7)
 
-    gf = GridFunc.from_file('../data/V.final.out')
+    gf = GridFunc.from_file('../data/surface.txt')
     assert gf.shape == (241, 101)
 
     from StringIO import StringIO
-    gf = GridFunc.from_file('../data/V.final.out')
+    gf = GridFunc.from_file('../data/surface.txt')
     buffer = StringIO()
     gf.save(buffer)
-    with open('../data/V.final.out') as f:
+    with open('../data/surface.txt') as f:
         orig = f.read()
     assert orig == buffer.getvalue()

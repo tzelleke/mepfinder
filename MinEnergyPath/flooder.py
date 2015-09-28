@@ -135,19 +135,12 @@ class Flooder(object):
 
 
 if __name__ == '__main__':
-    from vreco import Vreco
     from grid_func import GridFunc
 
-    v = Vreco('../data/colvar_mtd',
-              '../data/parvar_mtd')
-    pot, grid_vecs = v.pot(4000)
-
-    gf = GridFunc.from_grid_vecs(pot, grid_vecs)
+    gf = GridFunc.from_file('../data/surface.txt')
     flooder = Flooder(gf)
-    p1 = gf.map_nearest((8.5, 1.3))
-    p2 = gf.map_nearest((9, 2.5))
-    p1 = gf.minimize(p1)
-    p2 = gf.minimize(p2)
+    p1 = gf.g_minimize(None, (None, 0.5))
+    p2 = gf.g_minimize(None, (0.5, None))
     path = flooder.flood(p1, p2)
 
     for p in path:

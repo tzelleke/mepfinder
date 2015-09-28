@@ -3,9 +3,9 @@
 """
 
 from numpy import mgrid, argmin
+from phd_tools import Vreco
 
 import input_parser
-import vreco
 import grid_func
 import flooder
 import plot
@@ -36,7 +36,7 @@ def _floodfill(colvar, parvar, ngridpoints, endpoints):
     points_parser = input_parser.gen_points_parser()
     slices_gen_set = points_parser.parseString(endpoints)
 
-    v = vreco.Vreco(colvar, parvar)
+    v = Vreco(colvar, parvar)
     pot, grid_vecs = v.pot(ngridpoints)
 
     gf = grid_func.GridFunc.from_grid_vecs(pot, grid_vecs)
