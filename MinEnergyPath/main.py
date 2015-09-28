@@ -1,6 +1,4 @@
-"""
-@author: tzelleke
-"""
+__author__ = 'tzelleke'
 
 from numpy import mgrid, argmin
 from phd_tools import Vreco

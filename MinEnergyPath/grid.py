@@ -1,6 +1,4 @@
-"""
-@author: tzelleke
-"""
+__author__ = 'tzelleke'
 
 from itertools import product
 

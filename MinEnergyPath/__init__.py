@@ -1,3 +1,1 @@
-'''
-@author: tzelleke
-'''
+__author__ = 'tzelleke'

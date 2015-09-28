@@ -1,6 +1,4 @@
-"""
-@author: tzelleke
-"""
+__author__ = 'tzelleke'
 
 from heapq import heappush as hpush, heappop as hpop
 
@@ -34,8 +32,8 @@ class Path(object):
     def __getattr__(self, attrname):
         if attrname in Point.attribs:
             vals = []
-            for p in self.__points:
-                vals.append(getattr(p, attrname, None))
+            for point in self.__points:
+                vals.append(getattr(point, attrname, None))
             return np.array(vals)
         else:
             raise AttributeError(attrname)

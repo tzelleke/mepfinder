@@ -1,6 +1,4 @@
-"""
-@author: tzelleke
-"""
+__author__ = 'tzelleke'
 
 from docopt import docopt
 from grid_func import GridFunc
