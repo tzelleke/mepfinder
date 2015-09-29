@@ -12,13 +12,13 @@ class _OptimizationMixin(object):
     minima of a GridFunc on the grid.
     """
 
-    def minimize(self, coords_idx):
+    def minimize(self, coords):
+        coords_idx = self.map_nearest(coords)
         idx = self.idx(coords_idx)
-        min_idx = self.minimize_idx(idx)
-
+        min_idx = self._minimize(idx)
         return self.coords_idx(min_idx)
 
-    def minimize_idx(self, idx):
+    def _minimize(self, idx):
         min_idx = idx
         min_pot = self.pot_1D[idx]
         found_min = False
@@ -29,7 +29,6 @@ class _OptimizationMixin(object):
                     min_idx = node
                     min_pot = self.pot_1D[node]
                     found_min = False
-
         return min_idx
 
     def _filter_min(self, bounds_idx):
@@ -49,7 +48,6 @@ class _OptimizationMixin(object):
         #             min_coords_idx.append(bounds_idx[i][0] + coord_idx)
         min_coords_idx = np.unravel_index(min_idx, shape)
         offset = [lb for lb, ub in bounds_idx]
-
         return tuple([(o + c) for o, c in zip(offset, min_coords_idx)])
 
     def g_minimize(self, *args, **kwargs):
@@ -92,7 +90,6 @@ class _OptimizationMixin(object):
                 assert False, 'invalid bound'
 
         min_coords_idx = self._filter_min(bounds_idx)
-
         return min_coords_idx
 
 
@@ -133,7 +130,6 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         for gv in grid_vecs:
             gv = gv.ravel()
             linspaces.append((gv[0], gv[-1], gv.size))
-
         return cls(pot, linspaces)
 
     @classmethod
@@ -149,7 +145,6 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         for dim in range(data.shape[-1] - 1):
             gv = np.unique(data[:, dim])
             linspaces.append((gv[0], gv[-1], gv.size))
-
         return cls(pot, linspaces)
 
     def _copy(self):
@@ -166,9 +161,9 @@ class GridFunc(grid.Grid, _OptimizationMixin):
                 super(GridFunc, self).neighbors_idx(idx)
                 if not np.isnan(self.pot_1D[_])]
 
-    def smooth(self, sigma, copy=False):
+    def smooth(self, sigma, cval=0., copy=False):
         pot = self.pot_1D.reshape(self.shape)
-        pot_smoothed = gaussian_filter(pot, sigma, mode='constant')
+        pot_smoothed = gaussian_filter(pot, sigma, cval=cval, mode='constant')
         if not copy:
             gf = self
         else:
