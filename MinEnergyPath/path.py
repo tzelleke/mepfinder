@@ -1,7 +1,8 @@
-__author__ = 'tzelleke'
-
 import collections
 import numpy as np
+
+__author__ = 'tzelleke'
+
 
 class Point(object):
     attribs = {'coords': np.nan,

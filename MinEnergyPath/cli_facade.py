@@ -1,8 +1,9 @@
-__author__ = 'tzelleke'
-
 from docopt import docopt
 from grid_func import GridFunc
 from flooder import Flooder
+
+__author__ = 'tzelleke'
+
 
 _doc = """\
 Usage: floodfill_vreco.py <v_final_out>

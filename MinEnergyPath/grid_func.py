@@ -1,9 +1,8 @@
-__author__ = 'tzelleke'
-
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter
-
 import grid
+
+__author__ = 'tzelleke'
 
 
 class _OptimizationMixin(object):

@@ -1,8 +1,7 @@
-__author__ = 'tzelleke'
-
+import numpy as np
 from itertools import product
 
-import numpy as np
+__author__ = 'tzelleke'
 
 
 class Grid(object):
