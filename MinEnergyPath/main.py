@@ -14,12 +14,20 @@ def _point_callback(gf, point_spec):
         else:
             return gf.map_nearest(coords)
     if 'range' in point_spec:
-        return gf.g_minimize(point_spec['range'])
+        return gf.g_minimize(*point_spec['range'])
     raise RuntimeError('Unknown point_spec')
 
 
 def _evaluate_path(gf, points):
-    pass
+    flooder = Flooder(gf)
+    pstart, pend = points[0](gf), points[1](gf)
+    path = flooder.flood(pstart, pend)
+    for i in range(2, len(points)):
+        pstart = pend
+        pend = points[i](gf)
+        del path[-1]
+        path.extend(flooder.flood(pstart, pend))
+    return path
 
 
 # surface: /path/to/surface-file
@@ -47,7 +55,19 @@ def main(config):
         surfaces.append(smoothed_gf)
         if 'save' in smooth_spec and smooth_spec['save'] is True:
             pass  # TODO build filename from smooth_spec
+    pathes = [_evaluate_path(surface, points) for surface in surfaces]
+    return pathes
 
 
+# Tests
 if __name__ == '__main__':
-    pass
+    config = {'points': [{'range': [None, [None, 0.5]]},
+                         {'range': [None, [0.5, None]]},
+                         {'range': [None, [None, 0.5]]}],
+              'smooth': [{'cval': 0, 'save': True, 'sigma': 1.8},
+                         {'sigma': [3.2, 3.8]}],
+              'surface': '../data/surface.txt'}
+    pathes = main(config)
+    for path in pathes:
+        print path
+    print pathes[-1].coords_idx

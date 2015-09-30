@@ -1,46 +1,9 @@
 __author__ = 'tzelleke'
 
+import numpy as np
 from heapq import heappush as hpush, heappop as hpop
 
-import numpy as np
-
-
-class Point(object):
-    attribs = {'coords': np.nan,
-               'coords_idx': np.nan,
-               'pot': np.nan,
-               'has_nan_neighbor': False}
-
-    def __init__(self, **kwargs):
-        self.__dict__.update(Point.attribs)
-        self.__dict__.update(kwargs)
-
-    def __repr__(self):
-        return repr(self.__dict__)
-
-
-class Path(object):
-    def __init__(self):
-        self.__points = []
-
-    def append(self, point):
-        self.__points.append(point)
-
-    def __iter__(self):
-        return iter(self.__points)
-
-    def __getattr__(self, attrname):
-        if attrname in Point.attribs:
-            vals = []
-            for point in self.__points:
-                vals.append(getattr(point, attrname, None))
-            return np.array(vals)
-        else:
-            raise AttributeError(attrname)
-
-    @property
-    def points(self):
-        return (self.coords, self.pot)
+from path import Point, Path
 
 
 class EmptyHeapError(Exception):
