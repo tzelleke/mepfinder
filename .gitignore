@@ -1,3 +1,5 @@
 .idea
-/**/*.pyc
-scratchpad.py
+docs/_build
+*.pyc
+*.swp
+*.egg
