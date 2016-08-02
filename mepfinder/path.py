@@ -1,7 +1,6 @@
 import collections
-import numpy as np
 
-__author__ = 'tzelleke'
+import numpy as np
 
 
 class Point(object):

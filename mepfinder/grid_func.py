@@ -1,8 +1,6 @@
+import grid
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter
-import grid
-
-__author__ = 'tzelleke'
 
 
 class _OptimizationMixin(object):
@@ -132,19 +130,27 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         return cls(pot, linspaces)
 
     @classmethod
+    def from_surface(cls, surface):
+        """
+        convenience method to construct a GridFunc from
+        a 2D-np.array with columns [X, Y, ..., potential]
+        """
+        pot = surface[:, -1]
+        linspaces = []
+        for dim in range(surface.shape[-1] - 1):
+            gv = np.unique(surface[:, dim])
+            linspaces.append((gv[0], gv[-1], gv.size))
+        return cls(pot, linspaces)
+
+    @classmethod
     def from_file(cls, filepath):
         """
         convenience method to construct a GridFunc from
         a file, for instance from
         V.Final.out obtained through vreco
         """
-        data = np.loadtxt(filepath)
-        pot = data[:, -1]
-        linspaces = []
-        for dim in range(data.shape[-1] - 1):
-            gv = np.unique(data[:, dim])
-            linspaces.append((gv[0], gv[-1], gv.size))
-        return cls(pot, linspaces)
+        surface = np.loadtxt(filepath)
+        return cls.from_surface(surface)
 
     def _copy(self):
         """
@@ -184,7 +190,7 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         data = np.column_stack(data)
         chunksize = self.grid_vecs[-1].size
         for i in range(0, self.nnodes, chunksize):
-            np.savetxt(buffer, data[i:i+chunksize], fmt='%16.8f', delimiter=' ')
+            np.savetxt(buffer, data[i:i + chunksize], fmt='%16.8f', delimiter=' ')
             buffer.write('\n')
 
 
@@ -192,6 +198,7 @@ class GridFunc(grid.Grid, _OptimizationMixin):
 if __name__ == '__main__':
     def f(x, y):
         return 1. / np.exp(-(.1 * x ** 2 + 0.2 * y ** 2))
+
 
     linspaces = [[-2., 2., 11],
                  [-3, 3, 15]]
@@ -205,6 +212,7 @@ if __name__ == '__main__':
     assert gf.shape == (241, 101)
 
     from StringIO import StringIO
+
     gf = GridFunc.from_file('../data/surface.txt')
     buffer = StringIO()
     gf.save(buffer)

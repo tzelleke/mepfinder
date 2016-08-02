@@ -1,8 +1,7 @@
 from functools import partial
-from grid_func import GridFunc
-from flooder import Flooder
 
-__author__ = 'tzelleke'
+from flooder import Flooder
+from grid_func import GridFunc
 
 
 def _point_callback(gf, point_spec):

@@ -1,7 +1,6 @@
-import numpy as np
 from itertools import product
 
-__author__ = 'tzelleke'
+import numpy as np
 
 
 class Grid(object):
@@ -152,6 +151,7 @@ class Grid(object):
         else:
 
             return grid
+
 
 # TESTS
 if __name__ == '__main__':

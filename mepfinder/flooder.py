@@ -1,8 +1,7 @@
-import numpy as np
 from heapq import heappush as hpush, heappop as hpop
-from path import Point, Path
 
-__author__ = 'tzelleke'
+import numpy as np
+from path import Point, Path
 
 
 class EmptyHeapError(Exception):
