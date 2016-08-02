@@ -1,5 +1,6 @@
 .idea
-docs/_build
+docs
 *.pyc
 *.swp
 *.egg
+*.egg-info

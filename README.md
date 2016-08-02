@@ -1,6 +1,6 @@
-# MinEnergyPath
+# MEP-Finder
 
-MinEnergyPath finds minimum (free) energy paths connecting
+MEP-Finder finds minimum (free) energy paths connecting
 minima on multidimensional (free) energy surfaces
 
 ## Example
@@ -10,8 +10,8 @@ The example data can be found in the `data/` dir.
 Import `GridFunc` and `Flooder`
 
 ```python
-from MinEnergyPath.gridFunc import GridFunc
-from MinEnergyPath.flooder import Flooder
+from mepfinder.gridFunc import GridFunc
+from mepfinder.flooder import Flooder
 ```
 
 Use the `vreco` tool to generate `V.final.out`

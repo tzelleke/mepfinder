@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='MinEnergyPath',
+    name='mepfinder',
     version='0.1',
-    packages=['MinEnergyPath'],
+    packages=['mepfinder'],
     url='',
     license='MIT',
     author='Theodros Zelleke',
