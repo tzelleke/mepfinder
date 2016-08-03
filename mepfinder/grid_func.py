@@ -161,6 +161,15 @@ class GridFunc(grid.Grid, _OptimizationMixin):
         copy = self.__class__(pot, self.linspaces)
         return copy
 
+    def to_surface(self, indexing='xy'):
+        """
+        convert to 2D-np.array with columns [X, Y, ..., potential]
+        """
+        data = np.meshgrid(*self.grid_vecs, indexing=indexing)
+        data = [_.ravel() for _ in data]
+        data.append(self.pot_1D)
+        return np.vstack(data).transpose()
+
     def neighbors_idx(self, idx):
         return [_ for _ in
                 super(GridFunc, self).neighbors_idx(idx)
